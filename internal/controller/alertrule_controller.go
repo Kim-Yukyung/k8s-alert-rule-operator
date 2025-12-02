@@ -19,6 +19,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -68,8 +69,16 @@ func (r *AlertRuleReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	// PrometheusRule 생성 또는 업데이트
 	logger.Info("Reconciling PrometheusRule for AlertRule", "alertrule", alertRule.Name, "namespace", alertRule.Namespace)
 	if err := r.reconcilePrometheusRule(ctx, alertRule); err != nil {
-		logger.Error(err, "unable to reconcile PrometheusRule")
-		return ctrl.Result{}, err
+		errStr := err.Error()
+		if apierrors.IsNotFound(err) || apierrors.IsInvalid(err) ||
+			apierrors.IsMethodNotSupported(err) ||
+			strings.Contains(errStr, "no matches for kind") ||
+			strings.Contains(errStr, "CRD may not be available") {
+			logger.Info("PrometheusRule CRD not available, skipping PrometheusRule creation", "error", err)
+		} else {
+			logger.Error(err, "unable to reconcile PrometheusRule")
+			return ctrl.Result{}, err
+		}
 	}
 
 	// Status 업데이트
@@ -95,7 +104,7 @@ func (r *AlertRuleReconciler) reconcilePrometheusRule(ctx context.Context, alert
 
 	err := r.Get(ctx, client.ObjectKey{Namespace: alertRule.Namespace, Name: prometheusRuleName}, existingRule)
 	if err != nil && !apierrors.IsNotFound(err) {
-		return fmt.Errorf("unable to fetch PrometheusRule: %w", err)
+		return fmt.Errorf("unable to fetch PrometheusRule (CRD may not be available): %w", err)
 	}
 
 	prometheusRule := r.createPrometheusRule(alertRule)
