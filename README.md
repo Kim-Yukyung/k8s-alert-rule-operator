@@ -1,8 +1,16 @@
 # k8s-alert-rule-operator
-// TODO(user): Add simple overview of use/purpose
+
+A Kubernetes operator that automatically generates alert rules for Deployments and applies them to Prometheus.
 
 ## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+
+The **k8s-alert-rule-operator** watches Deployment resources and automatically creates corresponding `AlertRule` and `PrometheusRule` objects to manage alerting in Prometheus.
+
+### Key Features
+
+- **Auto Alert Rules**: Generates a default "Pod Down" alert for each new `Deployment`
+- **Prometheus Integration**: Translates `AlertRule` into `PrometheusRule` for Prometheus Operator
+- **Auto Cleanup**: Deletes related alert rules when the Deployment is removed
 
 ## Getting Started
 
