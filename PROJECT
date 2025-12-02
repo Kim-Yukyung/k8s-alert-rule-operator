@@ -3,7 +3,7 @@
 # and allow the plugins properly work.
 # More info: https://book.kubebuilder.io/reference/project-config.html
 cliVersion: 4.10.1
-domain: my.domain
+domain: example.com
 layout:
 - go.kubebuilder.io/v4
 projectName: k8s-alert-rule-operator
@@ -13,7 +13,7 @@ resources:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: my.domain
+  domain: example.com
   group: monitoring
   kind: AlertRule
   path: github.com/Kim-Yukyung/k8s-alert-rule-operator/api/v1

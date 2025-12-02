@@ -1,4 +1,4 @@
-apiVersion: monitoring.my.domain/v1
+apiVersion: monitoring.example.com/v1
 kind: AlertRule
 metadata:
   labels:
@@ -6,18 +6,4 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: alertrule-sample
 spec:
-  targetDeployment: my-app
-  rules:
-    - name: HighErrorRate
-      condition: error_rate > 5%
-      duration: 5m
-      severity: critical
-      notifications:
-        - discord: "#alerts"
-          email: "test@example.com"
-    - name: HighMemoryUsage
-      condition: memory_usage > 80%
-      duration: 10m
-      severity: warning
-      notifications:
-        - email: "test@example.com"
+  # TODO(user): Add fields here

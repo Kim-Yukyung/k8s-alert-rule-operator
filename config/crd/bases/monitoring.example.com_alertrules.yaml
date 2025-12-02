@@ -4,9 +4,9 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.19.0
-  name: alertrules.monitoring.my.domain
+  name: alertrules.monitoring.example.com
 spec:
-  group: monitoring.my.domain
+  group: monitoring.example.com
   names:
     kind: AlertRule
     listKind: AlertRuleList
@@ -39,39 +39,50 @@ spec:
           spec:
             description: spec defines the desired state of AlertRule
             properties:
-              rules:
-                items:
-                  properties:
-                    condition:
-                      type: string
-                    duration:
-                      type: string
-                    name:
-                      type: string
-                    notifications:
-                      items:
-                        properties:
-                          discord:
-                            type: string
-                          email:
-                            type: string
-                        type: object
-                      type: array
-                    severity:
-                      type: string
-                  required:
-                  - condition
-                  - duration
-                  - name
-                  - notifications
-                  - severity
-                  type: object
-                type: array
-              targetDeployment:
+              alert:
+                description: Alert name for the rule
+                type: string
+              annotations:
+                additionalProperties:
+                  type: string
+                description: Annotations for the alert
+                type: object
+              deploymentRef:
+                description: Reference to the Deployment that triggered this alert
+                  rule
+                properties:
+                  name:
+                    description: Name of the Deployment
+                    type: string
+                  namespace:
+                    description: Namespace of the Deployment
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+              expr:
+                description: Expression for the alert rule (PromQL)
+                type: string
+              for:
+                description: Duration for which the condition must be true before
+                  alerting
+                type: string
+              labels:
+                additionalProperties:
+                  type: string
+                description: Labels to add to the alert
+                type: object
+              severity:
+                description: Severity level (critical, warning, info)
+                enum:
+                - critical
+                - warning
+                - info
                 type: string
             required:
-            - rules
-            - targetDeployment
+            - alert
+            - expr
             type: object
           status:
             description: status defines the observed state of AlertRule

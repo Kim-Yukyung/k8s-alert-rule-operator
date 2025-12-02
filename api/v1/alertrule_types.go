@@ -30,21 +30,45 @@ type AlertRuleSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
-	TargetDeployment string     `json:"targetDeployment"`
-	Rules            []RuleSpec `json:"rules"`
+	// Alert name for the rule
+	// +required
+	Alert string `json:"alert"`
+
+	// Expression for the alert rule (PromQL)
+	// +required
+	Expr string `json:"expr"`
+
+	// Severity level (critical, warning, info)
+	// +kubebuilder:validation:Enum=critical;warning;info
+	// +optional
+	Severity string `json:"severity,omitempty"`
+
+	// Duration for which the condition must be true before alerting
+	// +optional
+	For string `json:"for,omitempty"`
+
+	// Labels to add to the alert
+	// +optional
+	Labels map[string]string `json:"labels,omitempty"`
+
+	// Annotations for the alert
+	// +optional
+	Annotations map[string]string `json:"annotations,omitempty"`
+
+	// Reference to the Deployment that triggered this alert rule
+	// +optional
+	DeploymentRef *DeploymentReference `json:"deploymentRef,omitempty"`
 }
 
-type RuleSpec struct {
-	Name          string             `json:"name"`
-	Condition     string             `json:"condition"`
-	Duration      string             `json:"duration"`
-	Severity      string             `json:"severity"`
-	Notifications []NotificationSpec `json:"notifications"`
-}
+// DeploymentReference references a Deployment
+type DeploymentReference struct {
+	// Namespace of the Deployment
+	// +required
+	Namespace string `json:"namespace"`
 
-type NotificationSpec struct {
-	Discord string `json:"discord,omitempty"`
-	Email   string `json:"email,omitempty"`
+	// Name of the Deployment
+	// +required
+	Name string `json:"name"`
 }
 
 // AlertRuleStatus defines the observed state of AlertRule.
