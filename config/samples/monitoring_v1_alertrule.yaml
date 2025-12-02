@@ -1,0 +1,9 @@
+apiVersion: monitoring.my.domain/v1
+kind: AlertRule
+metadata:
+  labels:
+    app.kubernetes.io/name: k8s-alert-rule-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: alertrule-sample
+spec:
+  # TODO(user): Add fields here

@@ -8,4 +8,14 @@ layout:
 - go.kubebuilder.io/v4
 projectName: k8s-alert-rule-operator
 repo: github.com/Kim-Yukyung/k8s-alert-rule-operator
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: my.domain
+  group: monitoring
+  kind: AlertRule
+  path: github.com/Kim-Yukyung/k8s-alert-rule-operator/api/v1
+  version: v1
 version: "3"
