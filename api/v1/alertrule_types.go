@@ -30,9 +30,21 @@ type AlertRuleSpec struct {
 	// The following markers will use OpenAPI v3 schema to validate the value
 	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
-	// foo is an example field of AlertRule. Edit alertrule_types.go to remove/update
-	// +optional
-	Foo *string `json:"foo,omitempty"`
+	TargetDeployment string     `json:"targetDeployment"`
+	Rules            []RuleSpec `json:"rules"`
+}
+
+type RuleSpec struct {
+	Name          string             `json:"name"`
+	Condition     string             `json:"condition"`
+	Duration      string             `json:"duration"`
+	Severity      string             `json:"severity"`
+	Notifications []NotificationSpec `json:"notifications"`
+}
+
+type NotificationSpec struct {
+	Discord string `json:"discord,omitempty"`
+	Email   string `json:"email,omitempty"`
 }
 
 // AlertRuleStatus defines the observed state of AlertRule.
