@@ -125,7 +125,7 @@ func (r *DeploymentReconciler) createDefaultAlertRule(deployment *appsv1.Deploym
 		},
 		Spec: monitoringv1.AlertRuleSpec{
 			Alert:    fmt.Sprintf("%sPodDown", deployment.Name),
-			Expr:     fmt.Sprintf("up{job=\"%s\"} == 0", deployment.Name),
+			Expr:     fmt.Sprintf("kube_deployment_status_replicas_available{deployment=\"%s\", namespace=\"%s\"} == 0", deployment.Name, deployment.Namespace),
 			For:      "1m",
 			Severity: "critical",
 			Labels: map[string]string{
@@ -166,7 +166,7 @@ func (r *DeploymentReconciler) deleteAlertRuleForDeployment(ctx context.Context,
 		logger.Error(err, "unable to fetch AlertRule for deletion")
 		return ctrl.Result{}, err
 	}
-	
+
 	logger.Info("Deleting AlertRule for deleted Deployment", "alertrule", alertRuleName)
 	if err := r.Delete(ctx, alertRule); err != nil {
 		if !apierrors.IsNotFound(err) {

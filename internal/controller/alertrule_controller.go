@@ -153,7 +153,7 @@ func (r *AlertRuleReconciler) createPrometheusRule(alertRule *monitoringv1.Alert
 	// PrometheusRule spec 구성
 	groups := []interface{}{
 		map[string]interface{}{
-			"name":  "alert-rule-operator",
+			"name":  fmt.Sprintf("%s-group", alertRule.Name),
 			"rules": []interface{}{r.buildPrometheusRule(alertRule)},
 		},
 	}
