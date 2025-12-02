@@ -46,13 +46,16 @@ var _ = Describe("AlertRule Controller", func() {
 			By("creating the custom resource for the Kind AlertRule")
 			err := k8sClient.Get(ctx, typeNamespacedName, alertrule)
 			if err != nil && errors.IsNotFound(err) {
-				resource := &monitoringv1.AlertRule{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      resourceName,
-						Namespace: "default",
-					},
-					// TODO(user): Specify other spec details if needed.
-				}
+			resource := &monitoringv1.AlertRule{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      resourceName,
+					Namespace: "default",
+				},
+				Spec: monitoringv1.AlertRuleSpec{
+					Alert: "test-alert",
+					Expr:  "up == 1",
+				},
+			}
 				Expect(k8sClient.Create(ctx, resource)).To(Succeed())
 			}
 		})
