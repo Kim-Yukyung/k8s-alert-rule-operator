@@ -6,4 +6,18 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: alertrule-sample
 spec:
-  # TODO(user): Add fields here
+  targetDeployment: my-app
+  rules:
+    - name: HighErrorRate
+      condition: error_rate > 5%
+      duration: 5m
+      severity: critical
+      notifications:
+        - discord: "#alerts"
+          email: "test@example.com"
+    - name: HighMemoryUsage
+      condition: memory_usage > 80%
+      duration: 10m
+      severity: warning
+      notifications:
+        - email: "test@example.com"
